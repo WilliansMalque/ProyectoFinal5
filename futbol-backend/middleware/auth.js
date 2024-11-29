@@ -17,3 +17,18 @@ exports.verificarToken = (req, res, next) => {
         return res.status(401).json({ error: 'Token inválido o expirado' });
     }
 };
+
+module.exports = (req, res, next) => {
+    const token = req.headers['authorization']?.split(' ')[1];
+    if (!token) {
+      return res.status(401).json({ error: 'Token no proporcionado' });
+    }
+  
+    try {
+      const decoded = jwt.verify(token, SECRET_KEY);
+      req.user = decoded; // Guardar información del usuario en la solicitud
+      next();
+    } catch (error) {
+      res.status(401).json({ error: 'Token inválido' });
+    }
+  };

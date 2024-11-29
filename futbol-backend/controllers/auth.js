@@ -1,19 +1,19 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
-const User = require('../models/User');
+const { User } = require('../models');
 
 const SECRET_KEY = 'tu_clave_secreta';
 
 exports.login = async (req, res) => {
   try {
-    const { correo, password } = req.body; // Cambiado "contraseña" a "password"
+    const { correo, password } = req.body;
 
     const usuario = await User.findOne({ where: { correo } });
     if (!usuario) {
       return res.status(404).json({ error: 'Usuario no encontrado' });
     }
 
-    const esValida = await bcrypt.compare(password, usuario.password); // Cambiado "contraseña" a "password"
+    const esValida = await bcrypt.compare(password, usuario.password);
     if (!esValida) {
       return res.status(401).json({ error: 'Password incorrecto' });
     }

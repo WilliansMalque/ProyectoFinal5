@@ -3,6 +3,12 @@ const router = express.Router();
 const Reserva = require('../models/Reserva');
 const { verificarToken } = require('../middleware/auth');
 
+const authMiddleware = require('../middleware/auth');
+const { obtenerReservas, crearReserva } = require('../controllers/reserva');
+
+router.get('/reservas', authMiddleware, obtenerReservas);
+router.post('/reservar', authMiddleware, crearReserva);
+
 // Crear una reserva (protegida)
 router.post('/reservar', verificarToken, async (req, res) => {
     try {
